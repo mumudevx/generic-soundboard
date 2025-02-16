@@ -2,6 +2,7 @@ import { CrawlerService } from "./crawler.service.js";
 import { RealmOfDarknessParser } from "./realm-of-darkness.parser.js";
 import { DatabaseService } from "./database.service.js";
 import { logger } from "../utils/logger.js";
+import path from "path";
 
 export class RealmOfDarknessCrawler extends CrawlerService {
   constructor() {
@@ -33,14 +34,20 @@ export class RealmOfDarknessCrawler extends CrawlerService {
         new: 0,
         updated: 0,
         errors: 0,
+        detailsCrawled: 0
       };
 
       for (const post of result.posts) {
         try {
           const isNew = await this.db.upsertPost(post.id, post);
+          
           if (isNew) {
             crawlResults.new++;
             logger.info(`New post found: ${post.title.text}`);
+            
+            // Crawl detail page for new posts
+            await this.crawlPostDetail(post);
+            crawlResults.detailsCrawled++;
           } else {
             crawlResults.updated++;
             logger.info(`Updated post: ${post.title.text}`);
@@ -60,22 +67,38 @@ export class RealmOfDarknessCrawler extends CrawlerService {
   }
 
   /**
-   * Crawls a specific post's detail page
-   * @param {string} url - The post's detail page URL
+   * Crawls a specific post's detail page and related files
+   * @param {Object} post - Post data from main page
    * @returns {Promise<Object>} The parsed post detail data
    */
-  async crawlPostDetail(url) {
+  async crawlPostDetail(post) {
     try {
-      logger.info(`Crawling post detail: ${url}`);
+      logger.info(`Crawling post detail: ${post.title.url}`);
+      
+      // Fetch detail page
+      const detailResponse = await this.fetchPage(post.title.url);
 
-      const response = await this.fetchPage(url);
-      // You can create a separate parser method for detail pages
-      const detailData = await this.parser.parseDetail(response.data);
+      // Parse detail page and handle JavaScript files
+      const detailData = await this.parser.parseDetail(
+        detailResponse.data,
+        post.id,
+        post.title.text
+      );
 
       return detailData;
     } catch (error) {
-      logger.error(`Error crawling post detail ${url}: ${error.message}`);
+      logger.error(`Error crawling post detail ${post.title.url}: ${error.message}`);
       throw error;
     }
+  }
+
+  /**
+   * Extracts slug from URL
+   * @param {string} url - The full URL
+   * @returns {string} The slug
+   */
+  extractSlug(url) {
+    const match = url.match(/\/sb\/([^/]+)\/?$/);
+    return match ? match[1] : '';
   }
 }
