@@ -22,6 +22,12 @@ class BaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: showFavoritesButton 
+            ? null 
+            : IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
         title: Text(
           title,
           style: const TextStyle(
@@ -35,6 +41,7 @@ class BaseScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         backgroundColor: AppConfig.primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -64,7 +71,10 @@ class BaseScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: IconButton(
-                          icon: const Icon(Icons.favorite),
+                          icon: const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
