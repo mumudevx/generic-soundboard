@@ -178,7 +178,7 @@ export class RealmOfDarknessParser extends ParserService {
       };
 
       // Extract button information directly from HTML
-      $("div.sb button").each((_, elem) => {
+      $("div.sb button").each((index, elem) => {
         const $button = $(elem);
         const buttonText = $button.text().trim();
         const buttonId = $button.attr("id");
@@ -186,6 +186,7 @@ export class RealmOfDarknessParser extends ParserService {
         // Skip "Stop Sounds" button and buttons without IDs
         if (buttonText !== "Stop Sounds" && buttonId) {
           soundboardData.buttons.push({
+            id: `sound_${index + 1}`,  // Add index-based id with sound_ prefix
             text: buttonText,
             soundFile: buttonId,
             soundPath: this.buildSoundPath(soundboardData.basePath, buttonId),
