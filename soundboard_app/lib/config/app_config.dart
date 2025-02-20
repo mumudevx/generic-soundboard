@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,6 +35,15 @@ class AppConfig {
   // Error Messages
   static const String errorPlayingSound = 'Error playing sound';
   static const String errorInitializingAudio = 'Error initializing audio';
+
+  // Ad Configuration
+  static const String bannerAdUnitId = kDebugMode
+      ? 'ca-app-pub-3940256099942544/6300978111'  // Test banner ad unit ID
+      : 'YOUR_PRODUCTION_BANNER_AD_UNIT_ID';
+
+  static const String interstitialAdUnitId = kDebugMode
+      ? 'ca-app-pub-3940256099942544/1033173712'  // Test interstitial ad unit ID
+      : 'YOUR_PRODUCTION_INTERSTITIAL_AD_UNIT_ID';
 
   // Theme Data
   static ThemeData getThemeData(BuildContext context) {

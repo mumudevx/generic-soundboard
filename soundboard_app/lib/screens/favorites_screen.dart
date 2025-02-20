@@ -3,6 +3,7 @@ import 'package:soundboard_app/widgets/base_screen.dart';
 import 'package:soundboard_app/services/storage_service.dart';
 import 'package:soundboard_app/widgets/sound_button.dart';
 import 'package:soundboard_app/config/app_config.dart';
+import 'package:soundboard_app/services/ad_manager.dart';
 
 class FavoritesScreen extends StatefulWidget {
   final List<Map<String, dynamic>> allSoundButtons;
@@ -27,6 +28,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     super.initState();
     _loadFavorites();
     _searchController.addListener(_onSearchChanged);
+    AdManager().loadInterstitialAd();  // Load the ad when screen opens
   }
 
   @override
@@ -52,22 +54,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Future<void> _loadFavorites() async {
     try {
       final favorites = await _storageService.getFavorites();
-      print('Loaded favorites: $favorites');
 
       setState(() {
-        favoriteButtons = favorites.map((id) {
-          return widget.allSoundButtons.firstWhere(
-            (button) => button['id'] == id,
-            orElse: () {
-              print('Button not found for id: $id');
-              return <String, dynamic>{};
-            },
-          );
-        })
-        .where((button) => button.isNotEmpty)
-        .toList();
+        favoriteButtons = favorites
+            .map((id) {
+              return widget.allSoundButtons.firstWhere(
+                (button) => button['id'] == id,
+                orElse: () {
+                  return <String, dynamic>{};
+                },
+              );
+            })
+            .where((button) => button.isNotEmpty)
+            .toList();
 
-        print('Processed favorite buttons: $favoriteButtons');
         displayedButtons = favoriteButtons;
       });
     } catch (e) {
@@ -75,34 +75,46 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    await AdManager().showInterstitialAd();
+    Navigator.of(context).pop(); // Explicitly pop the screen
+    return false; // Return false to prevent default back behavior
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      title: 'Favorite Sounds',
-      searchController: _searchController,
-      showFavoritesButton: false,
-      soundButtons: widget.allSoundButtons,
-      body: displayedButtons.isEmpty
-          ? const Center(child: Text('No favorite sounds yet'))
-          : GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 1.0,
-                crossAxisSpacing: 12.0,
-                mainAxisSpacing: 12.0,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: BaseScreen(
+        title: 'Favorite Sounds',
+        searchController: _searchController,
+        showFavoritesButton: false,
+        soundButtons: widget.allSoundButtons,
+        onBackPressed: () async {  // Add this callback
+          await _onWillPop();
+        },
+        body: displayedButtons.isEmpty
+            ? const Center(child: Text('No favorite sounds yet'))
+            : GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 12.0,
+                  mainAxisSpacing: 12.0,
+                ),
+                itemCount: displayedButtons.length,
+                itemBuilder: (context, index) {
+                  final button = displayedButtons[index];
+                  return SoundButton(
+                    text: button['text'],
+                    soundPath: 'assets/${button['localPath']}',
+                    color: AppConfig.getButtonColor(index),
+                    id: button['id'],
+                    onFavoriteChanged: _loadFavorites,
+                  );
+                },
               ),
-              itemCount: displayedButtons.length,
-              itemBuilder: (context, index) {
-                final button = displayedButtons[index];
-                return SoundButton(
-                  text: button['text'],
-                  soundPath: 'assets/${button['localPath']}',
-                  color: AppConfig.getButtonColor(index),
-                  id: button['id'],
-                  onFavoriteChanged: _loadFavorites,
-                );
-              },
-            ),
+      ),
     );
   }
-} 
+}

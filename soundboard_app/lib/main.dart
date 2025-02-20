@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:soundboard_app/config/app_config.dart';
 import 'package:soundboard_app/screens/home_screen.dart';
+import 'package:soundboard_app/services/ad_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AdManager().initialize();
+  await AdManager().loadInterstitialAd();
   runApp(const ProviderScope(child: SoundboardApp()));
 }
 

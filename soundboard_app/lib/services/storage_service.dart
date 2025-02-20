@@ -14,10 +14,8 @@ class StorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final favorites = prefs.getStringList(_favoritesKey) ?? [];
-      print('Retrieved favorites: $favorites');
       return favorites;
     } catch (e) {
-      print('Error getting favorites: $e');
       return [];
     }
   }
@@ -26,12 +24,10 @@ class StorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final favorites = await getFavorites();
-      print('Current favorites before adding: $favorites');
-      
+
       if (!favorites.contains(soundId)) {
         favorites.add(soundId);
         await prefs.setStringList(_favoritesKey, favorites);
-        print('Updated favorites after adding: $favorites');
       }
     } catch (e) {
       print('Error adding to favorites: $e');
