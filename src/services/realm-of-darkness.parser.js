@@ -4,6 +4,7 @@ import { logger } from "../utils/logger.js";
 import path from "path";
 import fs from "fs/promises";
 import axios from "axios";
+import { MobileAppGenerator } from './mobile-app.generator.js';
 
 export class RealmOfDarknessParser extends ParserService {
   constructor() {
@@ -12,6 +13,7 @@ export class RealmOfDarknessParser extends ParserService {
     this.maxRetries = 3;
     this.retryDelay = 2000; // 2 seconds
     this.concurrentDownloads = 2; // Number of concurrent downloads
+    this.mobileAppGenerator = new MobileAppGenerator();
   }
 
   /**
@@ -276,26 +278,117 @@ export class RealmOfDarknessParser extends ParserService {
       const soundsDir = path.join(soundboardDir, "sounds");
       await fs.mkdir(soundsDir, { recursive: true });
 
+      // First, check which files need to be downloaded
+      const existingFiles = new Set();
+      try {
+        const files = await fs.readdir(soundsDir);
+        for (const file of files) {
+          if (file.endsWith('.mp3')) {
+            const stats = await fs.stat(path.join(soundsDir, file));
+            if (stats.size > 0) {
+              existingFiles.add(file.replace('.mp3', ''));
+            }
+          }
+        }
+      } catch (error) {
+        logger.error(`Error reading existing files: ${error.message}`);
+      }
+
+      // Filter buttons that need downloading
+      const buttonsToDownload = soundboardData.buttons.filter(
+        button => !existingFiles.has(button.soundFile)
+      );
+
+      if (buttonsToDownload.length === 0) {
+        logger.info(`All ${soundboardData.buttons.length} sound files already exist for ${soundboardData.title}`);
+        
+        // Update localPath for all existing buttons
+        soundboardData.buttons.forEach(button => {
+          button.localPath = path.join("sounds", `${button.soundFile}.mp3`);
+        });
+
+        return {
+          success: soundboardData.buttons.length,
+          failed: 0,
+          total: soundboardData.buttons.length,
+          skipped: soundboardData.buttons.length
+        };
+      }
+
+      logger.info(`Found ${buttonsToDownload.length} new sounds to download out of ${soundboardData.buttons.length} total`);
+
       // Process buttons in chunks to limit concurrent downloads
       const chunks = this.chunkArray(
-        soundboardData.buttons,
+        buttonsToDownload,
         this.concurrentDownloads
       );
+
+      let downloadedCount = 0;
+      let failedDownloads = [];
+      const totalNewSounds = buttonsToDownload.length;
 
       for (const chunk of chunks) {
         const downloads = chunk.map((button) =>
           this.downloadSoundFileWithRetry(button, soundsDir)
+            .catch(error => {
+              failedDownloads.push({
+                button,
+                error: error.message
+              });
+              return false;
+            })
         );
-        await Promise.all(downloads);
+        
+        const results = await Promise.all(downloads);
+        const successfulDownloads = results.filter(result => result !== false).length;
+        downloadedCount += successfulDownloads;
+
+        logger.info(`Downloaded ${downloadedCount}/${totalNewSounds} new sound files`);
 
         // Add delay between chunks to avoid rate limiting
         if (chunks.indexOf(chunk) < chunks.length - 1) {
-          await this.delay(1000); // 1 second delay between chunks
+          await this.delay(1000);
         }
       }
 
-      // Update metadata with local paths
-      await this.saveSoundboardData(soundboardData);
+      // Remove failed downloads from metadata
+      if (failedDownloads.length > 0) {
+        logger.warn(`Failed to download ${failedDownloads.length} sound files:`, {
+          failed: failedDownloads.map(f => ({
+            text: f.button.text,
+            soundFile: f.button.soundFile,
+            error: f.error
+          }))
+        });
+
+        // Remove failed downloads from soundboardData.buttons
+        const failedSoundFiles = new Set(failedDownloads.map(f => f.button.soundFile));
+        soundboardData.buttons = soundboardData.buttons.filter(button => 
+          !failedSoundFiles.has(button.soundFile)
+        );
+
+        // Update metadata file with cleaned data
+        await fs.writeFile(
+          path.join(soundboardDir, "metadata.json"),
+          JSON.stringify(soundboardData, null, 2)
+        );
+      }
+
+      const totalSuccess = existingFiles.size + downloadedCount;
+      logger.info(`Sound files status for ${soundboardData.title}:`, {
+        existing: existingFiles.size,
+        newlyDownloaded: downloadedCount,
+        failed: failedDownloads.length,
+        total: soundboardData.buttons.length
+      });
+      
+      return {
+        success: totalSuccess,
+        failed: failedDownloads.length,
+        total: soundboardData.buttons.length,
+        skipped: existingFiles.size,
+        new: downloadedCount
+      };
     } catch (error) {
       logger.error(`Error downloading sound files: ${error.message}`);
       throw error;
@@ -312,12 +405,17 @@ export class RealmOfDarknessParser extends ParserService {
       const soundUrl = `https://www.realmofdarkness.net${button.soundPath}`;
       const soundFilePath = path.join(soundsDir, `${button.soundFile}.mp3`);
 
-      // Check if file already exists
+      // Check if file already exists and is valid
       try {
-        await fs.access(soundFilePath);
-        logger.info(`Sound file already exists: ${button.soundFile}.mp3`);
-        button.localPath = path.join("sounds", `${button.soundFile}.mp3`);
-        return;
+        const stats = await fs.stat(soundFilePath);
+        if (stats.size > 0) {
+          logger.info(`Sound file already exists and valid: ${button.soundFile}.mp3`);
+          button.localPath = path.join("sounds", `${button.soundFile}.mp3`);
+          return true;
+        } else {
+          // File exists but is empty, delete it
+          await fs.unlink(soundFilePath);
+        }
       } catch {
         // File doesn't exist, proceed with download
       }
@@ -326,7 +424,7 @@ export class RealmOfDarknessParser extends ParserService {
         method: "get",
         url: soundUrl,
         responseType: "arraybuffer",
-        timeout: 30000, // 30 seconds timeout
+        timeout: 30000,
         headers: {
           Accept: "*/*",
           "User-Agent": "Mozilla/5.0 (compatible; GenericCrawler/1.0;)",
@@ -336,11 +434,21 @@ export class RealmOfDarknessParser extends ParserService {
         },
       });
 
-      await fs.writeFile(soundFilePath, response.data);
-      logger.info(`Downloaded sound file: ${button.soundFile}.mp3`);
+      if (!response.data || response.data.length === 0) {
+        throw new Error('Empty response received');
+      }
 
-      // Add local path to button data
+      await fs.writeFile(soundFilePath, response.data);
+      
+      // Verify file was written successfully
+      const fileStats = await fs.stat(soundFilePath);
+      if (fileStats.size === 0) {
+        throw new Error('File was written but is empty');
+      }
+
+      logger.info(`Downloaded sound file: ${button.soundFile}.mp3`);
       button.localPath = path.join("sounds", `${button.soundFile}.mp3`);
+      return true;
     } catch (error) {
       if (attempt < this.maxRetries) {
         logger.warn(
@@ -349,9 +457,11 @@ export class RealmOfDarknessParser extends ParserService {
         await this.delay(this.retryDelay * attempt);
         return this.downloadSoundFileWithRetry(button, soundsDir, attempt + 1);
       }
+      
       logger.error(
         `Failed to download ${button.soundFile} after ${this.maxRetries} attempts: ${error.message}`
       );
+      throw error;
     }
   }
 
@@ -430,6 +540,19 @@ export class RealmOfDarknessParser extends ParserService {
       );
 
       logger.info(`Saved soundboard data to ${soundboardDir}`);
+
+      // Download sound files first
+      await this.downloadSoundFiles(soundboardData, soundboardDir);
+
+      // Generate mobile app only after all sounds are downloaded
+      try {
+        await this.mobileAppGenerator.generateMobileApp(soundboardData, soundboardDir);
+        logger.info(`Generated mobile app for ${soundboardData.title}`);
+      } catch (error) {
+        logger.error(`Error generating mobile app: ${error.message}`);
+        // Continue with the crawling process even if mobile app generation fails
+      }
+
       return soundboardDir;
     } catch (error) {
       logger.error(`Error saving soundboard data: ${error.message}`);
