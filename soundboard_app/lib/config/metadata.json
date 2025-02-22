@@ -1,357 +1,56 @@
 {
-  "id": "8900",
-  "title": "Arnold Schwarzenegger Soundboard: Political",
+  "id": "test-mh3o3-birdo",
+  "title": "Mh3o3 Birdo",
   "buttons": [
     {
       "id": "sound_1",
-      "text": "Hi",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "1",
+      "soundFile": "1",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/1.mp3",
+      "localPath": "sounds/1.mp3"
     },
     {
       "id": "sound_2",
-      "text": "This Demo",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "2",
+      "soundFile": "2",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/2.mp3",
+      "localPath": "sounds/2.mp3"
     },
     {
       "id": "sound_3",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "3",
+      "soundFile": "3",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/3.mp3",
+      "localPath": "sounds/3.mp3"
     },
     {
       "id": "sound_4",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "4",
+      "soundFile": "4",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/4.mp3",
+      "localPath": "sounds/4.mp3"
     },
     {
       "id": "sound_5",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "5",
+      "soundFile": "5",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/5.mp3",
+      "localPath": "sounds/5.mp3"
     },
     {
       "id": "sound_6",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "6",
+      "soundFile": "6",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/6.mp3",
+      "localPath": "sounds/6.mp3"
     },
     {
       "id": "sound_7",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_8",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_9",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_10",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_11",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_12",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_13",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_14",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_15",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_16",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_17",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_18",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_19",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_20",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_21",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_22",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_23",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_24",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_25",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_26",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_27",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_28",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_29",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_30",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_31",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_32",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_33",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_34",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_35",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_36",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_37",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_38",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_39",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_40",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_41",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_42",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_43",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_44",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_45",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_46",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_47",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_48",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_49",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
-    },
-    {
-      "id": "sound_50",
-      "text": "Hi Button Long Text This Test",
-      "soundFile": "hi",
-      "soundPath": "/audio/arnold/pol/hi.mp3",
-      "localPath": "sounds/hi.mp3"
+      "text": "7",
+      "soundFile": "7",
+      "soundPath": "/audio/vg/mario/mh3o3/birdo/7.mp3",
+      "localPath": "sounds/7.mp3"
     }
   ],
-  "basePath": "/audio/arnold/pol/"
+  "basePath": "/audio/vg/mario/mh3o3/birdo/"
 }
