@@ -11,6 +11,7 @@ export class RealmOfDarknessCrawler extends CrawlerService {
     this.db = new DatabaseService();
     this.baseUrl = "https://www.realmofdarkness.net/sb/";
     this.maxSoundboardsToCrawl = parseInt(process.env.MAX_SOUNDBOARDS_TO_CRAWL) || 10;
+    this.testSoundboardUrl = process.env.RUN_TEST_SB_LINK || null;
   }
 
   /**
@@ -20,6 +21,12 @@ export class RealmOfDarknessCrawler extends CrawlerService {
    */
   async crawlPosts(options = {}) {
     try {
+      // Check if we're in test mode
+      if (this.testSoundboardUrl) {
+        logger.info(`Running in test mode for soundboard: ${this.testSoundboardUrl}`);
+        return await this.crawlTestSoundboard();
+      }
+
       logger.info("Starting to crawl Realm of Darkness posts");
       logger.info(`Will crawl up to ${this.maxSoundboardsToCrawl} new soundboards`);
 
@@ -109,6 +116,54 @@ export class RealmOfDarknessCrawler extends CrawlerService {
       logger.error("Error during crawling:", error.message);
       throw error;
     }
+  }
+
+  /**
+   * Crawls a single test soundboard
+   * @returns {Promise<Object>} Crawling results
+   */
+  async crawlTestSoundboard() {
+    try {
+      // Extract title and ID from URL
+      const urlParts = this.testSoundboardUrl.split('/');
+      const slug = urlParts[urlParts.length - 2] || urlParts[urlParts.length - 1];
+      
+      // Create a minimal post object
+      const testPost = {
+        id: `test-${slug}`,
+        title: {
+          text: this._formatTitleFromSlug(slug),
+          url: this.testSoundboardUrl
+        }
+      };
+
+      // Crawl the test soundboard
+      await this.crawlPostDetail(testPost);
+
+      return {
+        total: 1,
+        new: 1,
+        updated: 0,
+        errors: 0,
+        detailsCrawled: 1,
+        pagesScanned: 1
+      };
+    } catch (error) {
+      logger.error(`Error crawling test soundboard: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Formats a title from a URL slug
+   * @param {string} slug - The URL slug
+   * @returns {string} Formatted title
+   */
+  _formatTitleFromSlug(slug) {
+    return slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   /**
