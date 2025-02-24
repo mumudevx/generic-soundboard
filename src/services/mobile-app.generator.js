@@ -246,9 +246,13 @@ export class MobileAppGenerator {
   async _createTodoFile(targetPath) {
     const todoContent = `# TODO List
 
+- [ ] Create add units on Admob
 - [ ] Update AndroidManifest with new Admob App ID
 - [ ] Replace ad unit IDs in app_config.dart
-- [ ] Update app icon in assets/icon/
+- [ ] Design app icon
+- [ ] Update app icon in assets/icon/ (dart run flutter_launcher_icons)
+- [ ] Release app (flutter build appbundle)
+- [ ] Create Google Play Console app and upload appbundle
 `;
 
     await fs.writeFile(path.join(targetPath, 'TODO.md'), todoContent);

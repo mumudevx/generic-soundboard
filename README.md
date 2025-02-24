@@ -15,3 +15,6 @@ Generic soundboard generator that contains crawling, code generation, auto pipel
 ### Admob Configuration
 - Update ```com.google.android.gms.ads.APPLICATION_ID``` meta-data value at ```android/app/src/main/AndroidManifest.xml``` (Admob App Id)
 - Update the admob ad-unit values under ```Ad Configuration``` section at ```lib/config/app_config.dart``` (Banner, Interstitial Ad-unit Ids)
+
+### Release App (appbundle)
+- Run this command to release app: ```flutter build appbundle```
