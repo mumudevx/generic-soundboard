@@ -197,6 +197,46 @@ export class MobileAppGenerator {
       .replace(/static const Color primaryColor = Color\([^)]+\);/, `static const Color primaryColor = Color(${randomColor});`);
 
     await fs.writeFile(configPath, configContent);
+
+    // Update Android app name
+    await this._updateAndroidAppName(targetPath, appName);
+  }
+
+  /**
+   * Updates the Android app name in strings.xml
+   * @param {string} targetPath - Target directory path
+   * @param {string} appName - New app name
+   */
+  async _updateAndroidAppName(targetPath, appName) {
+    try {
+      // Create res/values directory if it doesn't exist
+      const valuesDir = path.join(targetPath, 'android/app/src/main/res/values');
+      await fs.mkdir(valuesDir, { recursive: true });
+
+      // Create or update strings.xml
+      const stringsXml = `<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">${appName}</string>
+</resources>`;
+
+      await fs.writeFile(path.join(valuesDir, 'strings.xml'), stringsXml);
+      logger.info(`Updated Android app name to: ${appName}`);
+
+      // Update AndroidManifest.xml to use string resource
+      const manifestPath = path.join(targetPath, 'android/app/src/main/AndroidManifest.xml');
+      let manifestContent = await fs.readFile(manifestPath, 'utf8');
+      
+      // Replace android:label with string resource reference
+      manifestContent = manifestContent.replace(
+        /android:label="[^"]*"/,
+        'android:label="@string/app_name"'
+      );
+
+      await fs.writeFile(manifestPath, manifestContent);
+      logger.info('Updated AndroidManifest.xml to use string resource');
+    } catch (error) {
+      logger.error(`Error updating Android app name: ${error.message}`);
+    }
   }
 
   /**

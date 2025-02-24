@@ -41,12 +41,19 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       if (query.isEmpty) {
-        displayedButtons = favoriteButtons;
+        displayedButtons = List.from(favoriteButtons); // Create a new copy
       } else {
         displayedButtons = favoriteButtons
             .where((button) =>
                 button['text'].toString().toLowerCase().contains(query))
+            .map((button) => Map<String, dynamic>.from(button)) // Create a new copy of each button
             .toList();
+      }
+      
+      // Debug logs
+      print('Favorites Search Query: $query');
+      for (var button in displayedButtons) {
+        print('Favorite Button ID: ${button['id']}, Text: ${button['text']}, Sound: ${button['localPath']}');
       }
     });
   }
@@ -108,7 +115,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   return SoundButton(
                     text: button['text'],
                     soundPath: 'assets/${button['localPath']}',
-                    color: AppConfig.getButtonColor(index),
+                    color: AppConfig.getButtonColor(button['id']),
                     id: button['id'],
                     onFavoriteChanged: _loadFavorites,
                   );

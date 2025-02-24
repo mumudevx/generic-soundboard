@@ -49,6 +49,9 @@ class _SoundButtonState extends State<SoundButton> {
   @override
   void didUpdateWidget(SoundButton oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.soundPath != widget.soundPath) {
+      _initAudio(); // Reinitialize audio if soundPath changes
+    }
     _checkFavoriteStatus();
   }
 
@@ -95,11 +98,17 @@ class _SoundButtonState extends State<SoundButton> {
 
   Future<void> _initAudio() async {
     try {
+      print('Initializing audio for button ID: ${widget.id}, Text: ${widget.text}, Path: ${widget.soundPath}');
+      await _audioPlayer.stop();
+      await _audioPlayer.dispose();
+      _audioPlayer = AudioPlayer();
       await _audioPlayer.setAudioSource(AudioSource.asset(widget.soundPath));
       _audioPlayer.playerStateStream.listen((state) {
-        setState(() {
-          _isPlaying = state.playing && state.processingState != ProcessingState.completed;
-        });
+        if (mounted) {
+          setState(() {
+            _isPlaying = state.playing && state.processingState != ProcessingState.completed;
+          });
+        }
       });
     } catch (e) {
       debugPrint('${AppConfig.errorInitializingAudio}: $e');
@@ -108,6 +117,7 @@ class _SoundButtonState extends State<SoundButton> {
 
   Future<void> _playPause() async {
     try {
+      print('Playing audio for button ID: ${widget.id}, Text: ${widget.text}');
       if (_isPlaying) {
         await _audioPlayer.stop();
       } else {

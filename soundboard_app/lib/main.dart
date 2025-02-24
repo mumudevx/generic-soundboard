@@ -6,8 +6,9 @@ import 'package:soundboard_app/services/ad_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AdManager().initialize();
-  await AdManager().loadInterstitialAd();
+  final adManager = AdManager();
+  await adManager.initialize();
+  await adManager.loadInterstitialAd();
   runApp(const ProviderScope(child: SoundboardApp()));
 }
 

@@ -71,9 +71,10 @@ class AppConfig {
   }
 
   // Button Colors
-  static Color getButtonColor(int index) {
-    // Generate a unique color based on index
-    return Color((index * 0xFF3D88EF + 0xFF3D88EF) % 0xFFFFFFFF)
+  static Color getButtonColor(String id) {
+    // Use hashCode of ID to generate consistent color
+    final colorSeed = id.hashCode;
+    return Color((colorSeed * 0xFF3D88EF + 0xFF3D88EF) % 0xFFFFFFFF)
         .withAlpha((buttonOpacity * 255).round());
   }
 

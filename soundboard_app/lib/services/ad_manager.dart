@@ -8,7 +8,7 @@ class AdManager {
   InterstitialAd? _interstitialAd;
   bool _isBannerAdLoaded = false;
   bool _isInitialized = false;
-  bool _hasShownInterstitial = false;  // This will reset when app restarts
+  bool _hasShownInterstitial = false;
 
   factory AdManager() {
     return _instance;
@@ -22,8 +22,13 @@ class AdManager {
     try {
       await MobileAds.instance.initialize();
       _isInitialized = true;
-      _hasShownInterstitial = false; // Reset flag on initialization
+      _hasShownInterstitial = false;
+      
+      // Load ads only once during initialization
       loadBannerAd();
+      await loadInterstitialAd();  // Initial load
+      
+      debugPrint('AdManager initialized, interstitial ad loading...');
     } catch (e) {
       debugPrint('Failed to initialize AdMob: $e');
     }
@@ -85,55 +90,73 @@ class AdManager {
   }
 
   Future<void> loadInterstitialAd() async {
-    if (!_isInitialized || _hasShownInterstitial) {
-      debugPrint('Skipping interstitial ad load: initialized=$_isInitialized, hasShown=$_hasShownInterstitial');
+    if (!_isInitialized || _interstitialAd != null) {
+      debugPrint('Skipping interstitial ad load: already loaded or not initialized');
       return;
     }
 
     try {
+      debugPrint('Loading initial interstitial ad');
       await InterstitialAd.load(
         adUnitId: AppConfig.interstitialAdUnitId,
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {
-            debugPrint('Interstitial ad loaded successfully');
+            debugPrint('Initial interstitial ad loaded successfully');
             _interstitialAd = ad;
           },
           onAdFailedToLoad: (error) {
-            debugPrint('Interstitial ad failed to load: ${error.message}');
+            debugPrint('Initial interstitial ad failed to load: $error');
             _interstitialAd = null;
           },
         ),
       );
     } catch (e) {
-      debugPrint('Error loading interstitial ad: $e');
+      debugPrint('Error loading initial interstitial ad: $e');
     }
   }
 
   Future<void> showInterstitialAd() async {
-    if (!_isInitialized || _hasShownInterstitial || _interstitialAd == null) {
-      debugPrint('Skipping interstitial ad show: initialized=$_isInitialized, hasShown=$_hasShownInterstitial, adLoaded=${_interstitialAd != null}');
+    debugPrint('Attempting to show interstitial ad. Has shown before: $_hasShownInterstitial');
+    
+    // Check if ad was already shown
+    if (_hasShownInterstitial) {
+      debugPrint('Interstitial ad was already shown this session, skipping');
+      return;
+    }
+
+    // Check if ad is available
+    if (_interstitialAd == null) {
+      debugPrint('No interstitial ad available to show');
       return;
     }
 
     try {
-      _interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
+      debugPrint('Setting up interstitial ad callbacks');
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
-          debugPrint('Interstitial ad dismissed');
+          debugPrint('Interstitial ad dismissed, marking as shown');
+          _hasShownInterstitial = true;
           ad.dispose();
           _interstitialAd = null;
-          _hasShownInterstitial = true;
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
           debugPrint('Interstitial ad failed to show: $error');
           ad.dispose();
           _interstitialAd = null;
         },
+        onAdShowedFullScreenContent: (ad) {
+          debugPrint('Interstitial ad shown successfully, marking as shown');
+          _hasShownInterstitial = true;
+        },
       );
       
-      await _interstitialAd?.show();
+      debugPrint('Showing interstitial ad now');
+      await _interstitialAd!.show();
     } catch (e) {
       debugPrint('Error showing interstitial ad: $e');
+      _interstitialAd?.dispose();
+      _interstitialAd = null;
     }
   }
 

@@ -43,12 +43,19 @@ class HomeScreenState extends State<HomeScreen> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       if (query.isEmpty) {
-        displayedButtons = soundButtons;
+        displayedButtons = List.from(soundButtons);
       } else {
         displayedButtons = soundButtons
             .where((button) =>
                 button['text'].toString().toLowerCase().contains(query))
+            .map((button) => Map<String, dynamic>.from(button))
             .toList();
+      }
+      
+      // Debug logs
+      print('Search Query: $query');
+      for (var button in displayedButtons) {
+        print('Button ID: ${button['id']}, Text: ${button['text']}, Sound: ${button['localPath']}');
       }
     });
   }
@@ -94,7 +101,7 @@ class HomeScreenState extends State<HomeScreen> {
                   return SoundButton(
                     text: button['text'],
                     soundPath: 'assets/${button['localPath']}',
-                    color: AppConfig.getButtonColor(index),
+                    color: AppConfig.getButtonColor(button['id']),
                     id: button['id'],
                     onFavoriteChanged: () {
                       setState(() {});
