@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppConfig {
   // App Information
   static const String appName = 'Soundboard';
-  static const String packageName = 'com.mumudevx.soundboard';
+  static const String packageName = 'com.hayarsdev.soundboard';
   static const String version = '1.0.0';
 
   // Theme Configuration

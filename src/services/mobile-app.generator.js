@@ -198,8 +198,9 @@ export class MobileAppGenerator {
 
     await fs.writeFile(configPath, configContent);
 
-    // Update Android app name
+    // Update Android app name and namespace
     await this._updateAndroidAppName(targetPath, appName);
+    await this._updateAndroidNamespace(targetPath, packageName);
   }
 
   /**
@@ -236,6 +237,28 @@ export class MobileAppGenerator {
       logger.info('Updated AndroidManifest.xml to use string resource');
     } catch (error) {
       logger.error(`Error updating Android app name: ${error.message}`);
+    }
+  }
+
+  /**
+   * Updates the Android namespace in build.gradle.kts
+   * @param {string} targetPath - Target directory path
+   * @param {string} packageName - Package name to use as namespace
+   */
+  async _updateAndroidNamespace(targetPath, packageName) {
+    try {
+      const buildGradlePath = path.join(targetPath, 'android/app/build.gradle.kts');
+      let buildGradleContent = await fs.readFile(buildGradlePath, 'utf8');
+
+      // Update namespace and applicationId
+      buildGradleContent = buildGradleContent
+        .replace(/namespace = "[^"]+"/, `namespace = "${packageName}"`)
+        .replace(/applicationId = "[^"]+"/, `applicationId = "${packageName}"`);
+
+      await fs.writeFile(buildGradlePath, buildGradleContent);
+      logger.info(`Updated Android namespace and applicationId to: ${packageName}`);
+    } catch (error) {
+      logger.error(`Error updating Android namespace: ${error.message}`);
     }
   }
 
@@ -290,7 +313,7 @@ export class MobileAppGenerator {
     const sanitized = title.toLowerCase()
       .replace(/[^\w\s]/g, '')
       .replace(/\s+/g, '');
-    return `com.mumudevx.${sanitized}`;
+    return `com.hayarsdev.${sanitized}`;
   }
 
   /**
