@@ -274,7 +274,9 @@ export class MobileAppGenerator {
 - [ ] Replace ad unit IDs in app_config.dart
 - [ ] Design app icon
 - [ ] Update app icon in assets/icon/ (dart run flutter_launcher_icons)
+- [ ] Take screenshots for the app (./scripts/take_screenshots.sh)
 - [ ] Release app (flutter build appbundle)
+- [ ] Run content-automation project to generate app store listing content (index.js change prompt variable's value)
 - [ ] Create Google Play Console app and upload appbundle
 `;
 
