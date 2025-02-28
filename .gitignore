@@ -131,3 +131,4 @@ dist
 
 # Soundboard data
 data/
+.DS_Store
