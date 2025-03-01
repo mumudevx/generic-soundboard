@@ -275,6 +275,7 @@ export class MobileAppGenerator {
 - [ ] Design app icon
 - [ ] Update app icon in assets/icon/ (dart run flutter_launcher_icons)
 - [ ] Take screenshots for the app (./scripts/take_screenshots.sh)
+- [ ] Run generate_store_assets.dart to generate app store assets (./scripts/generate_store_assets.dart)
 - [ ] Release app (flutter build appbundle)
 - [ ] Run content-automation project to generate app store listing content (index.js change prompt variable's value)
 - [ ] Create Google Play Console app and upload appbundle
